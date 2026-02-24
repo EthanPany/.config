@@ -88,10 +88,6 @@ agent-tracker/run/server.pid
 tmux/cache
 agent-tracker/.DS_Store
 agent-tracker/run
-!/git/
-!/thefuck/
-/thefuck/__pycache__/
-yazi/keymap.toml.backup*
 !starship-tmux.toml
 
 !/opencode/
