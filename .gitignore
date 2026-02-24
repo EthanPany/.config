@@ -94,7 +94,10 @@ agent-tracker/run
 
 # Local machine configs
 !/ghostty/
+!/gh/
+gh/hosts.yml
 !/git/
+!/rstudio/
 !/thefuck/
 /thefuck/__pycache__/
 yazi/keymap.toml.backup*
