@@ -91,3 +91,9 @@ agent-tracker/run
 !starship-tmux.toml
 
 !/opencode/
+
+# Local machine configs
+!/git/
+!/thefuck/
+/thefuck/__pycache__/
+yazi/keymap.toml.backup*
