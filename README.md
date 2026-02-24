@@ -1,147 +1,98 @@
-# My Config
+# Ethan's Config
 
-[中文版](./README_cn.md)
+> Forked from [theniceboy/.config](https://github.com/theniceboy/.config) — adapted for **QWERTY keyboard** on **macOS (Ghostty) + Linux**.
 
-This config folder includes configurations for various development tools and applications.
+## What's inside
 
-## Deploy
+| Tool | Purpose |
+|---|---|
+| **ghostty** | Terminal emulator (macOS client) |
+| **tmux** | Terminal multiplexer |
+| **zsh** | Shell |
+| **starship** | Pane titles inside tmux |
+| **yazi** | File manager |
+| **lazygit / lazynpm** | Git & npm TUI |
+| **neofetch** | System info |
+| **agent-tracker** | Claude Code agent task tracker |
+| **codex / opencode** | AI coding tools |
 
-### Quick Setup
-Run the deployment script to install all tools and configure symlinks:
+## Key changes from upstream
+
+### QWERTY keyboard remapping
+The original config is built for **Colemak** layout. All positional bindings are remapped so the same finger positions work on a standard QWERTY keyboard:
+
+| Colemak | QWERTY | Direction |
+|---|---|---|
+| `n` | `j` | Left |
+| `e` | `k` | Down |
+| `u` | `i` | Up |
+| `i` | `l` | Right |
+
+### tmux — prefix is `Ctrl+s`
+
+**Panes (no prefix needed):**
+| Key | Action |
+|---|---|
+| `⌥j / ⌥k / ⌥i / ⌥l` | Move between panes (left/down/up/right) |
+| `⌥J / ⌥K / ⌥I / ⌥L` | Resize panes |
+| `⌥f` | Toggle fullscreen zoom |
+
+**Windows (no prefix needed):**
+| Key | Action |
+|---|---|
+| `⌥;` | New window |
+| `⌥Q` | Kill pane |
+| `⌥1`–`⌥9` | Jump to window |
+| `⌥u / ⌥o` | Swap window left / right |
+
+**Sessions (no prefix needed):**
+| Key | Action |
+|---|---|
+| `⌥D` | New session |
+| `⌥d` | Toggle scratchpad |
+| `Ctrl+1`–`Ctrl+9` | Switch session by index |
+
+**With prefix `Ctrl+s`:**
+| Key | Action |
+|---|---|
+| `i / k / j / l` | Split pane up/down/left/right |
+| `r` | Reload config |
+| `u / o` | Move window to session left/right |
+
+### Ghostty
+`macos-option-as-alt = true` — makes `Option` send ESC-prefix sequences so tmux `M-` bindings work on macOS. Without this, `Option+key` prints garbage instead of triggering shortcuts.
+
+### tmux 3.6+
+Requires tmux 3.6+ for `pane-scrollbars`. Build from source if your distro ships an older version:
 ```bash
-bin/upgrade-all
+sudo apt-get install -y libevent-dev libncurses-dev build-essential
+curl -sL https://github.com/tmux/tmux/releases/download/3.6/tmux-3.6.tar.gz | tar xz -C /tmp
+cd /tmp/tmux-3.6 && ./configure --prefix=/usr/local && make -j$(nproc) && sudo make install
+sudo ln -sf /usr/local/bin/tmux /usr/bin/tmux
 ```
 
-The script is idempotent - you can run it multiple times safely. It will:
-- Install/update Homebrew packages
-- Set up zsh configuration sourcing
-- Create configuration symlinks (tmux, claude)
-- Skip already installed packages
+## Setup on a new machine
 
-### Manual Homebrew Installation
-If you need to install Homebrew manually:
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 1. Clone into ~/.config
+git clone https://github.com/EthanPany/.config.git ~/.config
+
+# 2. Run the setup script (installs tools + creates symlinks)
+~/.config/bin/upgrade-all
+
+# 3. Linux only: set zsh as default shell
+sudo chsh -s /usr/bin/zsh $USER
 ```
 
-### Iterm2 config
-Title should be set to session name only. Do not allow other applications to change the title.
+## Syncing changes
 
-## Apps
-
-### Claude Code Voice Configuration
-
-This config includes a global voice system for Claude Code that uses macOS text-to-speech.
-
-#### Voice Commands
-- `/voice-on` - Enable text-to-speech globally
-- `/voice-off` - Disable text-to-speech globally
-
-#### Raycast Integration
-For quick voice control, use the included Raycast scripts:
-- **"Toggle Claude Voice"** - Toggle voice on/off from anywhere
-- **"Stop Voice (TTS)"** - Immediately stop any playing speech
-
-To add to Raycast: Add the `raycast-scripts/` directory to your Raycast script directories.
-
-#### Selecting and Downloading High Quality System Voices
-
-For the best text-to-speech experience, download high-quality system voices:
-
-1. **Open System Preferences** → **Accessibility** → **Spoken Content**
-2. **Click the info icon (ⓘ)** next to the "System Voice" dropdown
-3. **Search for "Siri"** to find the highest quality voices
-4. **Download Siri voices** - these are the premium, neural-powered voices
-5. **Select your preferred Siri voice** in the System Voice dropdown
-
-**Recommended**: Siri voices provide the most natural speech quality but require downloading additional voice data.
-
-#### Voice Settings
-Voice is controlled by a global flag file at `~/.claude/voice-enabled`. When this file exists, Claude Code will speak all responses.
-
-### Other Applications
-- **tmux**: Terminal multiplexer with custom configuration (set `TMUX_RAINBARF=0` before launching tmux to hide the rainbarf status segment)
-- **neovim**: Modern text editor
-- **yazi**: Terminal file manager
-- **lazygit**: TUI for git operations
-
-## Linux Related
-
-<details>
-<summary>Legacy Configuration (Click to expand)</summary>
-
-My scripts are in [this repo](https://github.com/theniceboy/scripts).
-
-This folder includes `i3` and `alacritty` config, however, I'm using [dwm](https://github.com/theniceboy/dwm) and [st](https://github.com/theniceboy/st) now.
-
-### Ranger
-Use `pip install ueberzug` and `ranger-git`
-
-### Mutt Email Setup
-In `~/.gnupg/gpg-agent.conf`:
-```
-default-cache-ttl 34560000
-max-cache-ttl 34560000
-```
-
-If this doesn't work, try [pam-gnupg](https://github.com/cruegge/pam-gnupg):
 ```bash
-yay -S pam-gnupg-git
+# Push changes from this machine
+cd ~/.config && git add -A && git commit -m "message" && git push
+
+# Pull on another machine
+cd ~/.config && git pull
+
+# Pull updates from the original author (optional)
+git fetch upstream && git merge upstream/main
 ```
-
-And in `/etc/pam.d/system-local-login` add:
-```
-auth     optional  pam_gnupg.so
-session  optional  pam_gnupg.so
-```
-
-### Input Methods
-Install: `fcitx` `fcitx-im` `fcitx-googlepinyin` `fcitx-configtool`
-
-And in `/etc/X11/xinit/xinitrc`:
-```bash
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
-```
-
-**Note**: Fcitx users need to set the first input method to be Keyboard - layout
-
-### Fonts
-
-#### Locale Configuration
-In `locale.conf`:
-```
-LANG=en_US.UTF-8
-LC_ADDRESS=en_US.UTF-8
-LC_IDENTIFICATION=en_US.UTF-8
-LC_MEASUREMENT=en_US.UTF-8
-LC_MONETARY=en_US.UTF-8
-LC_NAME=en_US.UTF-8
-LC_NUMERIC=en_US.UTF-8
-LC_PAPER=en_US.UTF-8
-LC_TELEPHONE=en_US.UTF-8
-LC_TIME=en_US.UTF-8
-```
-
-#### Font Recommendations
-- **Main Font**: `Source Code Pro` and `nerd-fonts-source-code-pro`
-- **Noto Fonts**: Install `noto-fonts` (not `-all` - it's bloated). Check `/usr/share/fonts/noto`
-
-#### Emoji Fonts
-```bash
-yay -S ttf-linux-libertine ttf-inconsolata ttf-joypixels ttf-twemoji-color noto-fonts-emoji ttf-liberation ttf-droid
-```
-
-#### Chinese Fonts
-```bash
-yay -S wqy-bitmapfont wqy-microhei wqy-microhei-lite wqy-zenhei adobe-source-han-mono-cn-fonts adobe-source-han-sans-cn-fonts adobe-source-han-serif-cn-fonts
-```
-
-### GTK Theme
-Using `adapta-gtk-theme` and `arc-icon-theme`.
-
-### Arch Packages
-See [my-packages.txt](https://github.com/theniceboy/.config/blob/master/my-packages.txt) for complete package list.
-
-</details>
