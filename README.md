@@ -60,7 +60,9 @@ The original config is built for **Colemak** layout. All positional bindings are
 | `u / o` | Move window to session left/right |
 
 ### Ghostty
-`macos-option-as-alt = true` — makes `Option` send ESC-prefix sequences so tmux `M-` bindings work on macOS. Without this, `Option+key` prints garbage instead of triggering shortcuts.
+`macos-option-as-alt = true` — makes `Option` send ESC-prefix sequences so tmux `M-` bindings work on macOS. Without this, `Option+key` prints garbage (`<ffffffff>`) instead of triggering shortcuts.
+
+> **After syncing to your Mac:** fully quit and reopen Ghostty (`Cmd+Q`) for this setting to take effect.
 
 ### tmux 3.6+
 Requires tmux 3.6+ for `pane-scrollbars`. Build from source if your distro ships an older version:
@@ -95,4 +97,18 @@ cd ~/.config && git pull
 
 # Pull updates from the original author (optional)
 git fetch upstream && git merge upstream/main
+```
+
+## First-time Mac setup
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/EthanPany/.config.git ~/.config
+
+# 2. Run setup
+~/.config/bin/upgrade-all
+
+# 3. Fully quit and reopen Ghostty (Cmd+Q)
+#    Required for macos-option-as-alt to take effect —
+#    without this Option+key prints <ffffffff> instead of triggering tmux shortcuts
 ```
