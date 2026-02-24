@@ -93,6 +93,7 @@ agent-tracker/run
 !/opencode/
 
 # Local machine configs
+!/ghostty/
 !/git/
 !/thefuck/
 /thefuck/__pycache__/
